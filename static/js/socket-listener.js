@@ -1,6 +1,7 @@
 
 var socket = io.connect();
 
+
 socket.on('news', function(data) {
 	console.log(data);
 	$("#board").append("<li>"+data.msg+"</li>");
@@ -16,3 +17,6 @@ $(document).ready(function() {
 		}
 	});
 });
+
+
+socket.emit("join", {msg: "browser"});
