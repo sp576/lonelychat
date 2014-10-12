@@ -36,17 +36,45 @@ var server = app.listen(app.get('port'), function() {
   console.log("Node app is running at localhost:" + app.get('port'));
 });
 
+var usernames = {};
+var numUsers = 0;
+
 var io = socketio.listen(server);
 io.on('connection', function(socket) {
 	socket.on("join", function(data) {		
 		var timestamp = new Date().toLocaleString();
-		socket.broadcast.emit("news", {msg: timestamp + ": " + data.msg + " joined to chat."});
-		socket.emit("news", {msg: timestamp + ": " + data.msg + " joined to chat."});
+		socket.username = data.username;
+		usernames[socket.username] = socket.username;
+		++numUsers;
+		socket.broadcast.emit("news", {
+			username: socket.username,
+			msg: timestamp + ": " + socket.username + " joined to chat from " + data.msg + ".",
+			numUsers: numUsers
+		});
+		socket.emit("news", {
+			username: socket.username,
+			msg: timestamp + ": " + socket.username + " joined to chat from " + data.msg + ".",
+			numUsers: numUsers
+		});
+	});
+
+	socket.on("disconnect", function() {
+		delete usernames[socket.username];
+		--numUsers;
+		var timestamp = new Date().toLocaleString();
+		socket.broadcast.emit("news", {
+			username: socket.username,
+			msg: "Left the chatroom at " + timestamp,
+			numUsers: numUsers
+		});
 	});
 
 	socket.on('chatMsg', function(data) {
 		console.log(data);
-		socket.broadcast.emit('news', { msg: data.msg});
+		socket.broadcast.emit('news', { 
+			username: socket.username,
+			msg: data.msg
+		});
 	});
 
 	redis_client.on('pmessage', function(pattern, channel, key) {
