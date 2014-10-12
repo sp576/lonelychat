@@ -7,8 +7,12 @@ socket.on('news', function(data) {
 });
 
 $(document).ready(function() {
-	$('#clickme').click(function() {
-		socket.emit('another news', {msg: "hey"});
-		console.log("yo");
+	$('#chatMsg').keyup(function(event) {
+		if (event.keyCode == 13) {
+			var message = this.value;
+			socket.emit('chatMsg', {msg: message});
+			console.log(message);	
+			this.value = '';
+		}
 	});
 });

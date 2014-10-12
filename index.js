@@ -39,9 +39,9 @@ var server = app.listen(app.get('port'), function() {
 var io = socketio.listen(server);
 io.on('connection', function(socket) {
 	
-	socket.on('another news', function(data) {
+	socket.on('chatMsg', function(data) {
 		console.log(data);
-		socket.emit('news', { msg: "what up?"});
+		socket.emit('news', { msg: data.msg});
 	});
 
 	redis_client.on('pmessage', function(pattern, channel, key) {
