@@ -1,0 +1,12 @@
+body {
+	margin: 0 auto;
+}
+
+#board {
+	max-width: 780px;	
+	padding: 5px;
+}
+
+#chatMsg {
+	max-width: 780px;
+}

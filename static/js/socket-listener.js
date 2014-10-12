@@ -9,20 +9,24 @@ socket.on('news', function(data) {
 	appendMsg(username, msg);
 });
 
-$(document).ready(function() {
-	$('#chatMsg').keyup(function(event) {
-		if (event.keyCode == 13) {
+$(document).ready(function() 
+{
+	$('#chatMsgTextInput').keyup(function(event) 
+	{
+		if (event.keyCode == 13) 
+		{
 			var message = this.value;
 			appendMsg(username, message);
-			socket.emit('chatMsg', {msg: message});
+			socket.emit('chatMsgTextInput', {msg: message});
 			console.log(message);	
 			this.value = '';
 		}
 	});
 });
 
-function appendMsg(username, msg) {
-	$("#board").append("<li>"+username+": "+msg+"</li>");
+function appendMsg(username, msg) 
+{
+	$("#board").append("<p><strong>"+username+":</strong> "+msg+"</p>");
 }
 
 function makeid()
@@ -35,7 +39,6 @@ function makeid()
 
     return text;
 }
-var username = "hamster" + Math.floor((Math.random() * 10000) + 1)
 socket.emit("join", {
 	username: username,
 	msg: "browser"
