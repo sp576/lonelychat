@@ -38,7 +38,7 @@ var server = app.listen(app.get('port'), function() {
 
 var io = socketio.listen(server);
 io.on('connection', function(socket) {
-	
+	socket.join("chatroom");
 	socket.on("join", function(data) {		
 		var timestamp = new Date().toLocaleString();
 		socket.emit("news", {msg: timestamp + ": " + data.msg + " joined to chat."});
