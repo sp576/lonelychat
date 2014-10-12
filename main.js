@@ -123,7 +123,7 @@ passport.deserializeUser(function(user, done)
 passport.use(new LocalStrategy(
 	function(username, password, done) 
 	{	
-		db.User.find({ username: username})
+		db.User.find({ where: { username: username}})
 			.success(function(user) 
 			{			
 				if (!user || !utils.checkPasswordHash(password, user.password)) 
@@ -131,6 +131,7 @@ passport.use(new LocalStrategy(
 					console.log("Invalid");
 					return done(null, false, { message: 'Invalid username or password.'});
 				}
+				console.log("login : " + user.username);
 				return done(null, user);
 			})
 			.error(function (err) {			
