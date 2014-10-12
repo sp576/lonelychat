@@ -41,6 +41,7 @@ io.on('connection', function(socket) {
 	socket.on("join", function(data) {		
 		var timestamp = new Date().toLocaleString();
 		socket.broadcast.emit("news", {msg: timestamp + ": " + data.msg + " joined to chat."});
+		socket.emit("news", {msg: timestamp + ": " + data.msg + " joined to chat."});
 	});
 
 	socket.on('chatMsg', function(data) {
