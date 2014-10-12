@@ -122,9 +122,7 @@ passport.deserializeUser(function(user, done)
 
 passport.use(new LocalStrategy(
 	function(username, password, done) 
-	{
-		console.log(username);
-		console.log(password);		
+	{	
 		db.User.find({ username: username})
 			.success(function(user) 
 			{			
@@ -185,18 +183,17 @@ app.get('/signout', function(request, response)
 
 app.post('/signup', function(request, response) 
 {
-	console.log(request.body);
 	var username = request.body.newusername;
 	var password1 = request.body.password1;
 	var password2 = request.body.password2;
-
+	
 	if (password1 != password2) 
 	{
 		return response.render('index', {title: 'LonelyChat', signup_error: 'Password did not match.'});
 	}
 	db.User.find({where: {username: username}})
 		.success(function(user)
-		{
+		{	
 			if (!user) 
 			{
 				var hash = utils.generatePasswordHash(password1);			
@@ -204,12 +201,16 @@ app.post('/signup', function(request, response)
 					username: username,
 					password: hash
 				})
-				.success(function(err, user) 
+				.success(function(new_user) 
 				{
-					return response.redirect('/chatroom');
+					request.login(new_user, function(err) {
+						if (err) { console.log("signup-login : " + err);}
+						return response.redirect('/chatroom');
+					})
 				})
 				.error(function (err) 
-				{
+				{	
+					console.log("create error : " + err);
 					return response.render('index', {title: 'LonelyChat', signup_error: 'Unknown Error'}); 
 				});
 			} 
