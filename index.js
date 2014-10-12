@@ -38,19 +38,18 @@ var server = app.listen(app.get('port'), function() {
 
 var io = socketio.listen(server);
 io.on('connection', function(socket) {
-	socket.join("chatroom");
 	socket.on("join", function(data) {		
 		var timestamp = new Date().toLocaleString();
-		socket.emit("news", {msg: timestamp + ": " + data.msg + " joined to chat."});
+		socket.broadcast.emit("news", {msg: timestamp + ": " + data.msg + " joined to chat."});
 	});
 
 	socket.on('chatMsg', function(data) {
 		console.log(data);
-		socket.emit('news', { msg: data.msg});
+		socket.broadcast.emit('news', { msg: data.msg});
 	});
 
 	redis_client.on('pmessage', function(pattern, channel, key) {
 		msg = JSON.parse(key);
-		socket.emit(channel, msg);
+		socket.broadcast.emit(channel, msg);
 	});
 })
