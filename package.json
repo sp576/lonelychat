@@ -1,25 +1,34 @@
 {
-  "name": "node-js-getting-started",
-  "version": "0.1.2",
-  "description": "A sample Node.js app using Express 4",
+  "name": "lonelycaht",
+  "version": "0.1.0",
+  "description": "LonelyChat app that supports cross-platform (browser, android) chat using WebSocket.",
   "main": "index.js",
   "scripts": {
     "start": "node index.js"
   },
   "dependencies": {
-    "express": "~4.9.x"
+    "pg": "~3.5",
+    "express": "~4.9.x",
+    "socket.io": "~1.1.x",
+    "hiredis": "~0.1.x",
+    "redis": "~0.12.x"
   },
   "engines": {
     "node": "0.10.x"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/heroku/node-js-getting-started"
+    "url": "https://github.com/sp576/lonelychat.git"
   },
   "keywords": [
     "node",
     "heroku",
     "express"
   ],
-  "license": "MIT"
+  "license": "BSD-2-Clause",
+  "bugs": {
+    "url": "https://github.com/sp576/lonelychat.git/issues"
+  },
+  "author": "Sungho Park",
+  "devDependencies": {}
 }
