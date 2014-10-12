@@ -1,0 +1,15 @@
+doctype html
+html(lang="en")
+	head
+		title!= title
+		meta(charset="UTF-8")
+		script(src="static/js/socket.io.js" type="text/javascript")
+		script(src="static/js/jquery-2.1.1.min.js" type="text/javascript")
+		script(src="static/js/socket-listener.js" type="text/javascript")
+	body
+		input(id="clickme" type="button" value="yo")
+		h3 Log
+		hr
+		ul(id="board")
+		hr
+		

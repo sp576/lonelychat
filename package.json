@@ -11,7 +11,8 @@
     "express": "~4.9.x",
     "socket.io": "~1.1.x",
     "hiredis": "~0.1.x",
-    "redis": "~0.12.x"
+    "redis": "~0.12.x",
+    "jade": "~1.7.0"
   },
   "engines": {
     "node": "0.10.x"
