@@ -14,8 +14,8 @@ var express = require('express')
 var app = express();
 
 // Redis as WebSocket message queue
-//var redis_client = redis.createClient(17754, "pub-redis-17754.us-east-1-4.1.ec2.garantiadata.com");
-var redis_client = redis.createClient(6379, 'localhost');
+var redis_client = redis.createClient(17754, "pub-redis-17754.us-east-1-4.1.ec2.garantiadata.com");
+//var redis_client = redis.createClient(6379, 'localhost');
 redis_client.auth('1SYLvTVmKTHsKuCJ');
 //redis_client.psubscribe('chat_*');
 
