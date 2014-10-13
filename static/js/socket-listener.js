@@ -17,7 +17,7 @@ $(document).ready(function()
 		{
 			var message = this.value;
 			appendMsg(username, message);
-			socket.emit('chatMsgTextInput', {msg: message});
+			socket.emit('chatMsg', {msg: message});
 			console.log(message);	
 			this.value = '';
 		}
