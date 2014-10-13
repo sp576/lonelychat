@@ -14,13 +14,13 @@ html(lang="en")
 		script(src="static/js/socket-listener.js" type="text/javascript")
 		link(rel="stylesheet" href="static/css/chat.css")
 	body
-		div(class="container center-block")
-			form(role="form" action="/signout" method="get")
+		div(class="container center-block bg-primary")
+			form(class="form-wrap" role="form" action="/signout" method="get")
 				button(type="submit" class="btn btn-danger") Sign out
 			h5 Instant Chat (Nothing will be saved after closing the chat session.)
 			
-			div(id="board", class="bg-primary")
+			div(id="board")
 			
 			div(id="chatMsg")
 				input(id="chatMsgTextInput" class="form-control" type="text" value="" placeholder="Type message..." autofocus)
-		
+				h6(id="notify")
