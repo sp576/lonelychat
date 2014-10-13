@@ -183,7 +183,6 @@ server = app.listen(app.get('port'), function()
 // Socket.io server side
 var usernames = {};
 var numUsers = 0;
-
 var io = socketio.listen(server);
 io.on('connection', function(socket) 
 {
@@ -197,7 +196,11 @@ io.on('connection', function(socket)
             redis_client.get(app.get('chat_log_key'), function (err, reply) {
                 if (!err) 
                 {
-                    chatLog = JSON.parse(reply);
+                    try {
+                        chatLog = JSON.parse(reply);
+                    } catch (e) { 
+                        redis_client.del(app.get('chat_log_key'));
+                    }
 
                 } 
                 else
