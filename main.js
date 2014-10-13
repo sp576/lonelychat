@@ -225,7 +225,7 @@ io.on('connection', function(socket)
             numUsers--;
             if (numUsers == 0) 
             {
-                redis_client.set(app.get('chat_log_key'), []);
+                redis_client.set(app.get('chat_log_key'), null);
             }
             var timestamp = new Date().toLocaleString();
             socket.broadcast.emit("news", {
