@@ -19,7 +19,9 @@ var redis_client = redis.createClient(17754, "pub-redis-17754.us-east-1-4.1.ec2.
 redis_client.auth('1SYLvTVmKTHsKuCJ');
 //redis_client.psubscribe('chat_*');
 
+
 // App env
+app.set('chat_log_key', "@##)(@dsaCdHAT-LOG12$)(#vcd");
 app.set('port', (process.env.PORT || 5000));
 app.use("/static", express.static(__dirname + '/static'));
 app.set('views', './templates');
@@ -190,23 +192,41 @@ io.on('connection', function(socket)
             var timestamp = new Date().toLocaleString();
             socket.username = data.username;
             usernames[socket.username] = socket.username;
-            ++numUsers;
+            numUsers++;
+            var chatLog;
+            redis_client.get(app.get('chat_log_key'), function (err, reply) {
+                if (!err) 
+                {
+                    chatLog = JSON.parse(reply);
+
+                } 
+                else
+                {
+                    chatLog = [];
+                }                 
+                socket.emit("news", {
+                    username: socket.username,
+                    msg: timestamp + ": " + socket.username + " joined to chat from " + data.msg + ".",
+                    numUsers: numUsers,
+                    chatLog: chatLog
+                });
+            });
+            
             socket.broadcast.emit("news", {
                 username: socket.username,
                 msg: timestamp + ": " + socket.username + " joined to chat from " + data.msg + ".",
                 numUsers: numUsers
             });
-            socket.emit("news", {
-                username: socket.username,
-                msg: timestamp + ": " + socket.username + " joined to chat from " + data.msg + ".",
-                numUsers: numUsers
-            });
-        });
+        });    
 
     socket.on("disconnect", function() 
         {
             delete usernames[socket.username];
-            --numUsers;
+            numUsers--;
+            if (numUsers == 0) 
+            {
+                redis_client.set(app.get('chat_log_key'), []);
+            }
             var timestamp = new Date().toLocaleString();
             socket.broadcast.emit("news", {
                 username: socket.username,
@@ -217,6 +237,24 @@ io.on('connection', function(socket)
 
     socket.on('chatMsg', function(data) 
         {
+            redis_client.get(app.get('chat_log_key'), function(err, reply) {                
+                if (!err && reply != null)
+                {   
+                    var chatlog = JSON.parse(reply);
+                    chatlog.push({username: socket.username, msg: data.msg});
+                    redis_client.set(app.get('chat_log_key'), JSON.stringify(chatlog));        
+                }
+                else if (!err && reply == null)
+                {
+                    var new_chatlog = [{username: socket.username, msg: data.msg}];
+                    redis_client.set(app.get('chat_log_key'),  JSON.stringify(new_chatlog));
+                }
+                else
+                {
+                    console.log("REDIS ERROR - " + err);
+                }
+                
+            });            
             socket.broadcast.emit('news', { 
                 username: socket.username,
                 msg: data.msg,

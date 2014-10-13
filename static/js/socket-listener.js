@@ -8,10 +8,14 @@ var unreadMsgCount = 0;
 var numUsers = 0;
 
 socket.on('news', function(data) {
-	console.log(data);
 	var username = data.username;
 	var msg = data.msg;
 	var is_me = numUsers == 0 ? true : false;
+	try {
+		appendChatLog(data.chatLog);
+	} catch (e) {
+		// void is the Di0v
+	}
 	numUsers = data.numUsers;
 	if (typing_username == username)
 	{
@@ -114,6 +118,14 @@ function makeid()
         text += possible.charAt(Math.floor(Math.random() * possible.length));
 
     return text;
+}
+
+function appendChatLog(chatLog)
+{
+	chatLog.forEach(function(entry) {
+		var is_me = entry.username == username ? true : false;
+		appendMsg(entry.username, entry.msg, is_me);
+	});
 }
 
 socket.emit("join", {
