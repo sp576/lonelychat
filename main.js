@@ -14,8 +14,8 @@ var express = require('express')
 var app = express();
 
 // Redis as WebSocket message queue
-var redis_client = redis.createClient(17754, "pub-redis-17754.us-east-1-4.1.ec2.garantiadata.com");
-//var redis_client = redis.createClient(6379, 'localhost');
+//var redis_client = redis.createClient(17754, "pub-redis-17754.us-east-1-4.1.ec2.garantiadata.com");
+var redis_client = redis.createClient(6379, 'localhost');
 redis_client.auth('1SYLvTVmKTHsKuCJ');
 //redis_client.psubscribe('chat_*');
 
@@ -211,14 +211,16 @@ io.on('connection', function(socket)
                     username: socket.username,
                     msg: timestamp + ": " + socket.username + " joined to chat from " + data.msg + ".",
                     numUsers: numUsers,
-                    chatLog: chatLog
+                    chatLog: chatLog,
+                    usernames: JSON.stringify(usernames)
                 });
             });
             
             socket.broadcast.emit("news", {
                 username: socket.username,
                 msg: timestamp + ": " + socket.username + " joined to chat from " + data.msg + ".",
-                numUsers: numUsers
+                numUsers: numUsers,
+                usernames: JSON.stringify(usernames)
             });
         });    
 
@@ -228,7 +230,7 @@ io.on('connection', function(socket)
             numUsers--;
             if (numUsers == 0) 
             {
-                redis_client.set(app.get('chat_log_key'), null);
+                redis_client.del(app.get('chat_log_key'));
             }
             var timestamp = new Date().toLocaleString();
             socket.broadcast.emit("news", {

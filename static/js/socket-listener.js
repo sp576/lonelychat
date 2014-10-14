@@ -4,8 +4,10 @@ var typing = false;
 var typing_username = '';
 var focused_tab = true;
 var original_title = document.title;
+var blink = null;
 var unreadMsgCount = 0;
 var numUsers = 0;
+
 
 socket.on('news', function(data) {
 	var username = data.username;
@@ -13,6 +15,12 @@ socket.on('news', function(data) {
 	var is_me = numUsers == 0 ? true : false;
 	try {
 		appendChatLog(data.chatLog);
+	} catch (e) {
+		// void is the Di0v
+	}
+	try {
+		console.log(data.usernames);
+		appendUsers(data.usernames);
 	} catch (e) {
 		// void is the Di0v
 	}
@@ -68,11 +76,21 @@ $(document).ready(function()
 
 	window.addEventListener('blur', function() {
 		blurredAction();
-	})
+	});
+
+	$('#left-tab').height($('.container').height());
+	$('#toggle-user').click(function(e) {
+		e.preventDefault();
+		$("#wrapper").toggleClass("toggled");
+	});
 });
 
 function refocusedAction()
 {
+	if (blink != null) {
+		clearInterval(blink);
+		blink = null;
+	}
 	focused_tab = true;
 	unreadMsgCount = 0;
 	document.title = original_title;
@@ -103,10 +121,24 @@ function appendMsg(username, msg, me)
 		nameColor = "text-success";
 	}
 	$("#board").append("<p><strong class='"+nameColor+"'>"+username+":</strong> "+msg+"</p>");
-	if (!focused_tab) {
+	if (!focused_tab) 
+	{
 		unreadMsgCount++;
-		document.title = original_title + " (" + unreadMsgCount + ") "
+		var new_title = original_title + " (" + unreadMsgCount + ")";
+		if (blink != null) 
+		{
+			clearInterval(blink);
+		}
+		blinkTitle(new_title);
+		blink = setInterval(function(){blinkTitle(new_title)}, 1500);		
 	}
+	var board = document.getElementById("board");
+	if (board.scrollHeight != null) { board.scrollTop = board.scrollHeight; }
+}
+
+function blinkTitle(title) 
+{
+	document.title = title == document.title ? ' ' : title;
 }
 
 function makeid()
@@ -126,6 +158,16 @@ function appendChatLog(chatLog)
 		var is_me = entry.username == username ? true : false;
 		appendMsg(entry.username, entry.msg, is_me);
 	});
+}
+
+function appendUsers(userlist)
+{
+	userlist = JSON.parse(userlist);
+	$(".username").remove()
+	for (var key in userlist) 
+	{
+		$("#user-list").append("<li class='username'><strong>"+key+"</strong></li>");
+	}
 }
 
 socket.emit("join", {
