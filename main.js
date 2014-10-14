@@ -236,7 +236,8 @@ io.on('connection', function(socket)
             socket.broadcast.emit("news", {
                 username: socket.username,
                 msg: "Left the chatroom at " + timestamp,
-                numUsers: numUsers
+                numUsers: numUsers,
+                usernames: JSON.stringify(usernames)
             });
         });
 
