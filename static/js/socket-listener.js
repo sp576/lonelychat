@@ -7,6 +7,7 @@ var original_title = document.title;
 var blink = null;
 var unreadMsgCount = 0;
 var numUsers = 0;
+var imageUploader;
 
 
 socket.on('news', function(data) {
@@ -83,6 +84,9 @@ $(document).ready(function()
 		e.preventDefault();
 		$("#wrapper").toggleClass("toggled");
 	});
+
+	imageUploader = document.getElementById('imageUploader');
+	imageUploader.addEventListener('change', handleImage, false);
 });
 
 function refocusedAction()
@@ -120,7 +124,11 @@ function appendMsg(username, msg, me)
 	{
 		nameColor = "text-success";
 	}
-	$("#board").append("<p><strong class='"+nameColor+"'>"+username+":</strong> "+msg+"</p>");
+	var newChat = $('<p></p>');
+	var usernameChat = $('<strong></strong>').addClass(nameColor).text(username + ": ");
+	newChat.append(usernameChat);
+	newChat.append(msg);
+	$("#board").append(newChat);
 	if (!focused_tab) 
 	{
 		unreadMsgCount++;
@@ -167,6 +175,21 @@ function appendUsers(userlist)
 	for (var key in userlist) 
 	{
 		$("#user-list").append("<li class='username'><strong>"+key+"</strong></li>");
+	}
+}
+
+function handleImage(e) {
+	var reader = new FileReader();
+	reader.onload = function(event) 
+	{
+		var img = new Image();
+		img.onload = function() 
+		{
+			img.onload = function() 
+			{
+				$("#board").append()
+			}
+		}
 	}
 }
 
