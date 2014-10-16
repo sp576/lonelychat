@@ -126,8 +126,9 @@ function appendMsg(username, msg, me)
 	}
 	var newChat = $('<p></p>');
 	var usernameChat = $('<strong></strong>').addClass(nameColor).text(username + ": ");
+	var newMsg = $('<span></span>').text(msg);
 	newChat.append(usernameChat);
-	newChat.append(msg);
+	newChat.append(newMsg);
 	$("#board").append(newChat);
 	if (!focused_tab) 
 	{
